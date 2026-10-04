@@ -1,4 +1,6 @@
 import Library.Book;
+import Library.BookOperation;
+import Library.LibraryUtils;
 import Library.LibrarianMember;
 import Library.Member;
 import Library.PublisherMember;
@@ -41,10 +43,7 @@ public class Main {
                         "ngororero"
                 );
 
-
-
         // 2. POLYMORPHISM
-
 
         System.out.println("Studentmember late fee: "
                 + studentMember.calculateLateFees(3));
@@ -52,9 +51,8 @@ public class Main {
         System.out.println("Publishermember late fee: "
                 + publisherMember.calculateLateFees(3));
 
-        System.out.println("Librarianmember  late fee: "
+        System.out.println("Librarianmember late fee: "
                 + librarianMember.calculateLateFees(3));
-
 
         // 3. LIST - STORE MEMBERS
 
@@ -70,9 +68,8 @@ public class Main {
             System.out.println(member);
         }
 
-
-
         // 4. CREATE BOOKS
+
         Book book1 = new Book(
                 "B001",
                 "Java Book",
@@ -100,35 +97,27 @@ public class Main {
                 true
         );
 
-
         // 5. SET - STORE BORROWED BOOKS
 
         Set<Book> borrowedBooks = new HashSet<>();
 
-        // Student borrows book1
         if (book1.isAvailability()) {
             book1.setAvailability(false);
             borrowedBooks.add(book1);
         }
 
-        // Student borrows book2
         if (book2.isAvailability()) {
             book2.setAvailability(false);
             borrowedBooks.add(book2);
         }
 
-
-        // Display borrowed books
         System.out.println("\nBorrowed Books:");
 
         for (Book book : borrowedBooks) {
             System.out.println(book);
         }
 
-
-
         // 6. MAP - MEMBER ACCOUNTS
-
 
         Map<String, Member> memberAccounts = new HashMap<>();
 
@@ -147,8 +136,6 @@ public class Main {
                 librarianMember
         );
 
-
-        // Find a member using ID
         Member foundMember = memberAccounts.get("stm001");
 
         System.out.println("\nMember Account:");
@@ -157,12 +144,11 @@ public class Main {
             System.out.println(foundMember);
         }
 
-
-
         // 7. MAP + SET
         // MEMBER → BORROWED BOOKS
 
-        Map<Member, Set<Book>> borrowedBooksByMember = new HashMap<>();
+        Map<Member, Set<Book>> borrowedBooksByMember =
+                new HashMap<>();
 
         Set<Book> studentBooks = new HashSet<>();
 
@@ -174,8 +160,6 @@ public class Main {
                 studentBooks
         );
 
-
-        // Display books borrowed by student
         System.out.println("\nBooks borrowed by "
                 + studentMember.getMemberName() + ":");
 
@@ -183,6 +167,70 @@ public class Main {
                 borrowedBooksByMember.get(studentMember)) {
 
             System.out.println(book);
+        }
+
+        // 8. FUNCTIONAL INTERFACE + LAMBDA
+
+        BookOperation operation = book ->
+                System.out.println(
+                        "Book title: " + book.getTitle()
+                );
+
+        System.out.println("\nFunctional Interface + Lambda:");
+
+        operation.perform(book1);
+
+        // 9. METHOD REFERENCE
+
+        BookOperation methodReference =
+                LibraryUtils::printBookTitle;
+
+        System.out.println("\nMethod Reference:");
+
+        methodReference.perform(book1);
+
+        // 10. CREATE BOOK LIST
+
+        List<Book> books = new ArrayList<>();
+
+        books.add(book1);
+        books.add(book2);
+        books.add(book3);
+
+        // 11. STREAM API - FILTER
+
+        System.out.println("\nAvailable Books:");
+
+        books.stream()
+                .filter(Book::isAvailability)
+                .forEach(System.out::println);
+        // 12. STREAM API - MAP
+
+        System.out.println("\nBook Titles:");
+
+        books.stream()
+                .map(Book::getTitle)
+                .forEach(System.out::println);
+        // 13. STREAM API - SORTED
+
+        System.out.println("\nSorted Book Titles:");
+
+        books.stream()
+                .map(Book::getTitle)
+                .sorted()
+                .forEach(System.out::println);
+        // 14. STREAM API - COLLECT
+
+        List<String> sortedBookTitles =
+                books.stream()
+                        .map(Book::getTitle)
+                        .sorted()
+                        .collect(java.util.stream.Collectors.toList());
+
+        System.out.println("\nCollected Sorted Book Titles:");
+
+        for (String title : sortedBookTitles) {
+            System.out.println(title);
         }
     }
 }
